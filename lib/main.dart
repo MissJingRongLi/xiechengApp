@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.blue,
         
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+//        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: TabNavigator(),
     );

@@ -13,10 +13,16 @@ class GridNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return PhysicalModel(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(6),
+//      是否裁切
+    clipBehavior: Clip.antiAlias,
+      child: Container(
+          child: Column(
 //      网格布局数组
-            children: _gridNavItems(context)));
+              children: _gridNavItems(context))),
+    );
   }
 
   _gridNavItems(BuildContext context) {
@@ -84,6 +90,7 @@ class GridNav extends StatelessWidget {
         child: _warpGesture(
             context,
             Stack(
+              alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
                 Image.network(
                   model.icon,
@@ -92,9 +99,12 @@ class GridNav extends StatelessWidget {
                   width: 121,
                   alignment: AlignmentDirectional.bottomEnd,
                 ),
-                Text(
-                  model.title,
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                Container(
+                  margin: EdgeInsets.only(top: 11),
+                  child: Text(
+                    model.title,
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
                 )
               ],
             ),

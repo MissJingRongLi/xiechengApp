@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:xiecheng/dao/home_dao.dart';
 import 'package:xiecheng/models/common_model.dart';
 import 'package:xiecheng/models/grid_nav_model.dart';
+import 'package:xiecheng/models/sales_box_model.dart';
 import 'package:xiecheng/widgets/grid_nav.dart';
 import 'package:xiecheng/widgets/local_nav.dart';
+import 'package:xiecheng/widgets/sale_box.dart';
+import 'package:xiecheng/widgets/sub_nav.dart';
 
 
 // 设置常量 计算何时appbar显示透明
@@ -26,7 +30,9 @@ class _HomePageState extends State<HomePage> {
   // 接口请求返回数据
   List<CommonModel> bannerList = [];
   List<CommonModel> localNavList = [];
+  List<CommonModel> subNavList = [];
   GridNavModel gridNavModel;
+  SalesBoxModel salesBox;
 
   loadData() {
     HomeDao.fetch().then((value){
@@ -34,6 +40,8 @@ class _HomePageState extends State<HomePage> {
         localNavList = value.localNavList;
         gridNavModel = value.gridNav;
         bannerList = value.bannerList;
+        subNavList = value.subNavList;
+        salesBox = value.salesBox;
         // gridNavList = value.gridNav as List<CommonModel>;
       });
     }).catchError((e){
@@ -75,6 +83,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             // 监听滚动事件
             child: NotificationListener(
+              // ignore: missing_return
               onNotification: (ScrollNotification) {
                 // 提高性能  --- 滚动 且是列表滚动时
                 if (ScrollNotification is ScrollUpdateNotification &&
@@ -90,10 +99,25 @@ class _HomePageState extends State<HomePage> {
                     height: 160,
                     child: bannerWidget(),
                   ),
-                  LocalNav(localNavList: localNavList),
+                 Padding(
+                   padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
+                   child:  LocalNav(localNavList: localNavList),
+                 ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                    child: GridNav(gridNavModel: gridNavModel,),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                    child: SubNav(subNavList: subNavList,),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                    child: SaleBox(salesBox: salesBox,),
+                  ),
                   Container(
                     height: 800,
-                    child: GridNav(gridNavModel: gridNavModel,),
+                    child: Text('111'),
                     ),
                 ],
               ),

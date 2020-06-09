@@ -125,6 +125,7 @@ class _WebViewState extends State<WebView> {
       );
     }
     return Container(
+      color: backgroundColor,
       child: FractionallySizedBox(
         // 撑满宽度
         widthFactor: 1,
