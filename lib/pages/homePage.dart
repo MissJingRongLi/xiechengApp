@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:xiecheng/dao/home_dao.dart';
 import 'package:xiecheng/models/common_model.dart';
+import 'package:xiecheng/models/grid_nav_model.dart';
+import 'package:xiecheng/widgets/grid_nav.dart';
 import 'package:xiecheng/widgets/local_nav.dart';
 
 
@@ -19,22 +21,20 @@ class _HomePageState extends State<HomePage> {
     initialPage: 0,
   );
 
-  // 定义图片数组
-  List _imgUrls = [
-    'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1466962837,902622328&fm=26&gp=0.jpg',
-    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1591370192764&di=65403754e5a057a016fad27a06c2a068&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170917%2Fd9c9faa48234438c9870a68c0cbd4265.jpeg',
-    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1591370192762&di=70fefbcbc899fbad2e1de5b6d0f3b131&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn20115%2F331%2Fw679h452%2F20190430%2Fe3af-hwfpcxn1463208.jpg'
-  ];
-
   double appBarAlpha = 0;
 
   // 接口请求返回数据
+  List<CommonModel> bannerList = [];
   List<CommonModel> localNavList = [];
+  GridNavModel gridNavModel;
 
   loadData() {
     HomeDao.fetch().then((value){
       setState(() {
         localNavList = value.localNavList;
+        gridNavModel = value.gridNav;
+        bannerList = value.bannerList;
+        // gridNavList = value.gridNav as List<CommonModel>;
       });
     }).catchError((e){
       print(e);
@@ -93,10 +93,8 @@ class _HomePageState extends State<HomePage> {
                   LocalNav(localNavList: localNavList),
                   Container(
                     height: 800,
-                    child: ListTile(
-                      title: Text('resultString'),
+                    child: GridNav(gridNavModel: gridNavModel,),
                     ),
-                  )
                 ],
               ),
             )),
@@ -109,11 +107,12 @@ class _HomePageState extends State<HomePage> {
   // 轮播组件
   Widget bannerWidget() {
     return Swiper(
-      itemCount: _imgUrls.length,
+      itemCount: bannerList.length,
       autoplay: true,
       itemBuilder: (BuildContext context, int index) {
         return Image.network(
-          _imgUrls[index],
+          // Image.network（）无法处理HTTP重定向。
+          bannerList[index].icon,
           fit: BoxFit.fill,
         );
       },
@@ -138,3 +137,4 @@ class _HomePageState extends State<HomePage> {
         );
   }
 }
+
