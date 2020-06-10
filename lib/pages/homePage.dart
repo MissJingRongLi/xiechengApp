@@ -8,9 +8,11 @@ import 'package:xiecheng/models/common_model.dart';
 import 'package:xiecheng/models/grid_nav_model.dart';
 import 'package:xiecheng/models/sales_box_model.dart';
 import 'package:xiecheng/widgets/grid_nav.dart';
+import 'package:xiecheng/widgets/loading_container.dart';
 import 'package:xiecheng/widgets/local_nav.dart';
 import 'package:xiecheng/widgets/sale_box.dart';
 import 'package:xiecheng/widgets/sub_nav.dart';
+import 'package:xiecheng/widgets/webview.dart';
 
 
 // 设置常量 计算何时appbar显示透明
@@ -34,7 +36,9 @@ class _HomePageState extends State<HomePage> {
   GridNavModel gridNavModel;
   SalesBoxModel salesBox;
 
-  loadData() {
+  bool _loading = true;
+
+  Future<Null> _handleRefresh() {
     HomeDao.fetch().then((value){
       setState(() {
         localNavList = value.localNavList;
@@ -42,11 +46,14 @@ class _HomePageState extends State<HomePage> {
         bannerList = value.bannerList;
         subNavList = value.subNavList;
         salesBox = value.salesBox;
+        _loading = false;
         // gridNavList = value.gridNav as List<CommonModel>;
       });
     }).catchError((e){
       print(e);
+      _loading = false;
     });
+    return null;
   }
 
   void _onScroll(offset){
@@ -66,7 +73,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadData();
+    _handleRefresh();
   }
 
   @override
@@ -74,58 +81,35 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       // 设置背景色
       backgroundColor: Color(0xfff2f2f2),
-        body: Stack(
-      children: <Widget>[
-        // 去除顶部的padding
-        MediaQuery.removePadding(
-            // 添加顶部参数为true
-            removeTop: true,
-            context: context,
-            // 监听滚动事件
-            child: NotificationListener(
-              // ignore: missing_return
-              onNotification: (ScrollNotification) {
-                // 提高性能  --- 滚动 且是列表滚动时
-                if (ScrollNotification is ScrollUpdateNotification &&
-                // 只需监听最外层的listView
-                    ScrollNotification.depth == 0) {
-                      _onScroll(ScrollNotification.metrics.pixels);
-                    }
-              },
-              // listView可滚动
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    height: 160,
-                    child: bannerWidget(),
+        body: LoadingContainer(isLoading: _loading,
+        child: Stack(
+          children: <Widget>[
+            // 去除顶部的padding
+            MediaQuery.removePadding(
+              // 添加顶部参数为true
+                removeTop: true,
+                context: context,
+                // 监听滚动事件
+                child: RefreshIndicator(
+                  onRefresh: _handleRefresh,
+                  child: NotificationListener(
+                    // ignore: missing_return
+                    onNotification: (ScrollNotification) {
+                      // 提高性能  --- 滚动 且是列表滚动时
+                      if (ScrollNotification is ScrollUpdateNotification &&
+                          // 只需监听最外层的listView
+                          ScrollNotification.depth == 0) {
+                        _onScroll(ScrollNotification.metrics.pixels);
+                      }
+                    },
+                    // listView可滚动
+                    child: _listView,
                   ),
-                 Padding(
-                   padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
-                   child:  LocalNav(localNavList: localNavList),
-                 ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: GridNav(gridNavModel: gridNavModel,),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: SubNav(subNavList: subNavList,),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: SaleBox(salesBox: salesBox,),
-                  ),
-                  Container(
-                    height: 800,
-                    child: Text('111'),
-                    ),
-                ],
-              ),
-            )),
+                )),
             // 自定义的appBar
-        appBarDiy(appBarAlpha),
-      ],
-    ));
+            appBarDiy(appBarAlpha),
+          ],
+        )),);
   }
 
   // 轮播组件
@@ -134,10 +118,21 @@ class _HomePageState extends State<HomePage> {
       itemCount: bannerList.length,
       autoplay: true,
       itemBuilder: (BuildContext context, int index) {
-        return Image.network(
-          // Image.network（）无法处理HTTP重定向。
-          bannerList[index].icon,
-          fit: BoxFit.fill,
+        return GestureDetector(
+          onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context){
+                CommonModel model = bannerList[index];
+                 return  WebView(url: model.url, statusBarColor: model.statusBarColor, hideAppBar: model.hideAppBar,);
+                }
+                ));
+          },
+          child: Image.network(
+            // Image.network（）无法处理HTTP重定向。
+            bannerList[index].icon,
+            fit: BoxFit.fill,
+          ),
         );
       },
       pagination: SwiperPagination(),
@@ -160,5 +155,37 @@ class _HomePageState extends State<HomePage> {
           ),
         );
   }
+
+  Widget get _listView {
+    return ListView(
+      children: <Widget>[
+        Container(
+          height: 160,
+          child: bannerWidget(),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
+          child:  LocalNav(localNavList: localNavList),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+          child: GridNav(gridNavModel: gridNavModel,),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+          child: SubNav(subNavList: subNavList,),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+          child: SaleBox(salesBox: salesBox,),
+        ),
+        Container(
+          height: 800,
+          child: Text('111'),
+        ),
+      ],
+    );
+  }
+
 }
 
