@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   bool _loading = true;
 
-  Future<Null> _handleRefresh() {
+  Future<Null> _handleRefresh() async{
     HomeDao.fetch().then((value){
       setState(() {
         localNavList = value.localNavList;
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       // 设置背景色
       backgroundColor: Color(0xfff2f2f2),
-        body: LoadingContainer(isLoading: _loading,
+        body: LoadingContainer(isLoading: _loading, cover: false,
         child: Stack(
           children: <Widget>[
             // 去除顶部的padding
