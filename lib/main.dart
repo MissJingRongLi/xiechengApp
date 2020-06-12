@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xiecheng/navigator/tab_navigator.dart';
+import 'package:xiecheng/pages/homePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
         
 //        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      routes: <String, WidgetBuilder> {
+          '/home': (BuildContext context) => new TabNavigator(),
+        },
       home: TabNavigator(),
     );
   }

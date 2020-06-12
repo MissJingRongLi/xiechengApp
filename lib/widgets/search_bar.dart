@@ -46,7 +46,7 @@ class _SearchBarState extends State<SearchBar> {
         children: <Widget>[
           _warpTap(
             Container(
-              padding: EdgeInsets.fromLTRB(6, 5, 10, 5),
+              padding: EdgeInsets.fromLTRB(6, 0, 10, 5),
               child: widget?.hideLeft ?? false ? null :
               Icon(Icons.arrow_back_ios,
                 color: Colors.grey,
@@ -80,7 +80,7 @@ class _SearchBarState extends State<SearchBar> {
         children: <Widget>[
           _warpTap(
               Container(
-                padding: EdgeInsets.fromLTRB(6, 5, 5, 5),
+                padding: EdgeInsets.fromLTRB(6, 0, 5, 5),
                 child: Row(
                  children: <Widget>[
                    Text(
@@ -122,7 +122,7 @@ class _SearchBarState extends State<SearchBar> {
     if(widget.searchBarType == SearchBarType.home){
       inputBoxColor = Colors.white;
     } else {
-      inputBoxColor = Color(int.parse('#EDEDED'));
+      inputBoxColor = Color(int.parse('0xff' + 'EDEDED'));
     }
     return Container(
       //设置背景色
@@ -155,11 +155,13 @@ class _SearchBarState extends State<SearchBar> {
               ),
               //输入文本的样式
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                 border: InputBorder.none,
-                hintText: widget.hint ?? '',
-                hintStyle: TextStyle(fontSize: 15),
+                hintText: widget.hint,
+                // contentPadding: const EdgeInsets.symmetric(vertical: 8.0), 
+                // contentPadding: EdgeInsets.zero
               ),
+              
+              
             ) : _warpTap(
               Container(
                 child: Text(

@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:xiecheng/widgets/search_bar.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -14,8 +17,16 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('搜索'),),
+      body: Container(
+        padding: EdgeInsets.only(top: MediaQueryData.fromWindow(window).padding.top),
+        child: SearchBar(
+        enabled: false,
+        hideLeft:false,
+        hint: '请输入要搜索的内容',
+        leftButtonClick: (){
+          Navigator.pushReplacementNamed(context, '/home');
+        },
+      ))
     );
   }
 }

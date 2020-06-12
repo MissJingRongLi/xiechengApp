@@ -18,6 +18,7 @@ import 'package:xiecheng/widgets/webview.dart';
 
 // 设置常量 计算何时appbar显示透明
 const AppBar_SCROLL_OFFSET = 100;
+const SEARCH_BAR_DEFAULT_TEXT = '请输入搜索内容';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -82,8 +83,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       // 设置背景色
       backgroundColor: Color(0xfff2f2f2),
-        body: LoadingContainer(isLoading: _loading, cover: false,
-        child: Stack(
+        body: LoadingContainer(
+          isLoading: _loading, cover: false,
+          child: Stack(
           children: <Widget>[
             // 去除顶部的padding
             MediaQuery.removePadding(
@@ -154,7 +156,7 @@ class _HomePageState extends State<HomePage> {
             )
           ),
           child: Container(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            padding: EdgeInsets.all(0),
             height: 80.0,
             decoration: BoxDecoration(
               color: Color.fromARGB((appBarAlpha * 255).toInt(), 255, 255, 255)
