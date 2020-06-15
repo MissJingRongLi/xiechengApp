@@ -30,7 +30,7 @@ class _TabNavigatorState extends State<TabNavigator> {
         // 定义首页的四个页面
         children: <Widget>[
           HomePage(),
-          SearchPage(),
+          SearchPage( hideLeft: true),
           TravelPage(),
           MyPage(),
         ],

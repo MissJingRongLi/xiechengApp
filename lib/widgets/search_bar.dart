@@ -156,8 +156,9 @@ class _SearchBarState extends State<SearchBar> {
               //输入文本的样式
               decoration: InputDecoration(
                 border: InputBorder.none,
+                // 加了hintText文字后 输入框中文字不再居中
                 hintText: widget.hint,
-                // contentPadding: const EdgeInsets.symmetric(vertical: 8.0), 
+                contentPadding: const EdgeInsets.symmetric(vertical: 8.0), 
                 // contentPadding: EdgeInsets.zero
               ),
               

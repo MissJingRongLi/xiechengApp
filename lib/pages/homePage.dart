@@ -7,6 +7,7 @@ import 'package:xiecheng/dao/home_dao.dart';
 import 'package:xiecheng/models/common_model.dart';
 import 'package:xiecheng/models/grid_nav_model.dart';
 import 'package:xiecheng/models/sales_box_model.dart';
+import 'package:xiecheng/pages/searchPage.dart';
 import 'package:xiecheng/widgets/grid_nav.dart';
 import 'package:xiecheng/widgets/loading_container.dart';
 import 'package:xiecheng/widgets/local_nav.dart';
@@ -18,7 +19,7 @@ import 'package:xiecheng/widgets/webview.dart';
 
 // 设置常量 计算何时appbar显示透明
 const AppBar_SCROLL_OFFSET = 100;
-const SEARCH_BAR_DEFAULT_TEXT = '请输入搜索内容';
+const SEARCH_BAR_DEFAULT_TEXT = '网红打卡地 景点 酒店 美食';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -213,7 +214,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   _jumpToSearch(){
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context){
+          return SearchPage(
+            hideLeft: false,
+            hint: SEARCH_BAR_DEFAULT_TEXT,);
+        }));
   }
 
   _jumpToSpeak(){
