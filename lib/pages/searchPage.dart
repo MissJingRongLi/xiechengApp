@@ -135,34 +135,20 @@ class _SearchPageState extends State<SearchPage> {
                     )));
       },
       child: Container(
-        padding: EdgeInsets.all(0),
+        // alignment: Alignment.bottomLeft,
+        margin: EdgeInsets.only(left: 10),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(width: 0.3, color: Colors.grey))),
-        child: Row(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(1),
-              child: Image(
-                height: 26,
-                width: 26,
-                image:AssetImage(_typeImage(item.type))
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Container(
-                  width: 300,
-                  child: _title(item),
-                ),
-                Container(
-                  width: 300,
-                  margin: EdgeInsets.only(top:5),
-                  child: _subTitle(item),
-                )
-              ],
-            )
-          ],
+          border: Border(bottom: BorderSide(width: 0.3, color: Colors.blue))
         ),
+        child: 
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _title(item),
+                _subTitle(item),
+              ],
+            ) ,
       ),
     );
   }
