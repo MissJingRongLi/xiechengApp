@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:xiecheng/dao/search_dao.dart';
 import 'package:xiecheng/models/search_model.dart';
+import 'package:xiecheng/pages/speakPage.dart';
 import 'package:xiecheng/widgets/search_bar.dart';
 import 'package:xiecheng/widgets/webview.dart';
 
@@ -107,6 +108,15 @@ class _SearchPageState extends State<SearchPage> {
               hideLeft: widget.hideLeft,
               defaultText: widget.keyword,
               hint: widget.hint,
+              speakClick: (){
+                Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (context){
+                      return SpeakPage();
+                    }
+                )
+                );
+              },
               leftButtonClick: () {
                 // 直接使用Navigator.pop(context)会黑屏。。。
                 Navigator.pushReplacementNamed(context, '/home');

@@ -2,9 +2,11 @@ package com.example.plugin.asr;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,26 +14,43 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 
-public class AsrPlugin implements MethodChannel.MethodCallHandler {
+public class AsrPlugin implements MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener {
     private final static String TAG = "AsrPlugin";
     private final Activity activity;
     private ResultStateful resultStateful;
     private AsrManager asrManager;
+    static MethodChannel channel;
+    private static final String CHANNEL_NAME = "flutter_asr_plugin";
 
     public AsrPlugin(PluginRegistry.Registrar registrar){
         this.activity = registrar.activity();
     }
 
-    public static void registerWith(PluginRegistry.Registrar registrar) {
-        MethodChannel channel = new MethodChannel(registrar.messenger(), "asr_plugin");
-        AsrPlugin instance = new AsrPlugin(registrar);
-        channel.setMethodCallHandler(instance);
-    }
+//    public static void registerWith(PluginRegistry.Registrar registrar) {
+//        if (registrar.activity() != null) {
+//            channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
+//            final AsrPlugin instance = new AsrPlugin(registrar);
+//            registrar.addActivityResultListener(instance);
+//            channel.setMethodCallHandler(instance);
+//        }
+//    }
 
+    //    public static void registerWith(PluginRegistry.Registrar registrar) {
+//        MethodChannel channel = new MethodChannel(registrar.messenger(), "asr_plugin");
+//        AsrPlugin instance = new AsrPlugin(registrar);
+//        channel.setMethodCallHandler(instance);
+//    }
+//    public static void registerWith(@NonNull FlutterEngine flutterEngine) {
+//        ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
+//
+//        com.example.plugin.asr.AsrPlugin.registerWith((FlutterEngine) shimPluginRegistry.registrarFor("com.example.plugin.asr.AsrPlugin"));
+//    }
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result){
         initPermission();
@@ -80,7 +99,7 @@ public class AsrPlugin implements MethodChannel.MethodCallHandler {
     @Nullable
     private AsrManager getAsrManager(){
         if(asrManager == null){
-            if(activity != null && activity.isFinishing()){
+            if(activity != null && !activity.isFinishing()){
                 asrManager = new AsrManager(activity, onAsrListener);
             }
         }
@@ -188,5 +207,10 @@ public class AsrPlugin implements MethodChannel.MethodCallHandler {
             ActivityCompat.requestPermissions(activity, toApplyList.toArray(tmpList), 123);
         }
 
+    }
+
+    @Override
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        return false;
     }
 }

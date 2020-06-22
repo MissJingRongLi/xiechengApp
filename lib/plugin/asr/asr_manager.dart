@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 class AsrManager {
   //MethodChannel flutter与native通信的通道
-  static const MethodChannel _channel = const MethodChannel('asr_plugin');
+  static const MethodChannel _channel = const MethodChannel('flutter_asr_plugin');
   /// 定义一些与native通信的接口
   /// 开始录音
   static Future<String> start({Map params}) async {
